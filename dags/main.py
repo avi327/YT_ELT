@@ -5,6 +5,8 @@ from api.video_stats import get_playlistId, get_video_ids, extract_video_data, s
 
 local_tz = pendulum.timezone("Europe/Malta")
 
+from datawarehouse.dwh import staging_table, core_table
+
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
@@ -33,3 +35,16 @@ with DAG(
     save_to_json_json=save_to_json(extracted_data)
 
     playlist_id >> video_ids >> extracted_data >> save_to_json_json
+
+with DAG(
+    dag_id='update_db',
+    default_args=default_args,
+    description='DAG to proccess json file and insert data into both staging and core schemas',
+    schedule_interval='0 15 * * *',  # Daily at 3 PM
+    catchup=False,
+) as dag:
+    
+    update_staging = staging_table()
+    update_core = core_table()
+
+    update_staging >> update_core
