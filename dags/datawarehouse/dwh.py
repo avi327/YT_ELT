@@ -60,7 +60,7 @@ def core_table():
                     insert_rows(cur, conn, schema, transformed_row)
                 else:
                     transformed_row = transform_data(row)
-                    if row["video_id"] in table_ids:
+                    if row["Video_ID"] in table_ids:
                         update_rows(cur, conn, schema, transformed_row)
                     else:
                         insert_rows(cur, conn, schema, transformed_row)

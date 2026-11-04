@@ -9,7 +9,6 @@ def parse_duration(duration_str):
     for component in components:
         if component in duration_str:
             value, duration_str = duration_str.split(component)
-            logging.info(f"Parsed {component}: {value}")
             values[component] = int(value)
     total_duration = timedelta(days=values["D"], hours=values["H"], minutes=values["M"], seconds=values["S"])
     return total_duration
